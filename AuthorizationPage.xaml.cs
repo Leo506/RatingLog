@@ -16,15 +16,22 @@ using System.Windows.Shapes;
 namespace RatingLog
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Логика взаимодействия для AuthorizationPage.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class AuthorizationPage : Page
     {
-        public MainWindow()
+        public AuthorizationPage()
         {
             InitializeComponent();
+        }
 
-            MainFrame.Content = new AuthorizationPage();
+        private void Authorize(object sender, RoutedEventArgs e)
+        {
+            var login = LoginInput.Text;
+            var password = PasswordInput.Password;
+
+            if (DBManip.HasUser(login, password))
+                MessageBox.Show("Success authorization!!!");
         }
     }
 }
