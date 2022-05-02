@@ -84,5 +84,38 @@ namespace RatingLog.Database
 
         }
 
+        public static string[] GetAllNames(string group)
+        {
+            string command = $"call GetAllNames(\"{group}\");";
+            MySqlCommand cmd = new MySqlCommand(command, connection);
+
+            List<string> names = new List<string>();
+            var reader = cmd.ExecuteReader();
+            while (reader.Read())
+                names.Add(reader.GetString("fullname"));
+
+            reader.Close();
+            reader.Dispose();
+
+            return names.ToArray();
+        }
+
+        public static int[] GetGrades(string name)
+        {
+            string command = $"call GetGradesByName(\"{name}\");";
+            MySqlCommand cmd = new MySqlCommand(command, connection);
+
+            List<int> grades = new List<int>();
+
+            var reader = cmd.ExecuteReader();
+            while (reader.Read())
+                grades.Add(reader.GetInt32("grade"));
+
+            reader.Close();
+            reader.Dispose();
+
+            return grades.ToArray();
+        }
+
     }
 }

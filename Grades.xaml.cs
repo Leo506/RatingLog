@@ -22,6 +22,8 @@ namespace RatingLog
     /// </summary>
     public partial class Grades : Page
     {
+        DataTable table = new DataTable();
+
         public Grades()
         {
             InitializeComponent();
@@ -29,17 +31,50 @@ namespace RatingLog
             {
                 ClassList.Items.Add(new TextBlock() { Text = group });
             }
+            
         }
 
         private void OnGroupChange(object sender, SelectionChangedEventArgs e)
         {
+            string newGroup = ((TextBlock)ClassList.SelectedItem).Text;
             Table.Columns.Clear();
-            Table.Columns.Add(new DataGridTextColumn() { Header = "Name" } );
-            foreach (var date in RatingLogic.GetInstance().GetAllDates(((TextBlock)ClassList.SelectedItem).Text))
+            table.Columns.Clear();
+            table.Rows.Clear();
+            table.Columns.Add("Name");
+            Table.Columns.Add(new DataGridTextColumn() { Binding = new Binding("Name"), Header = "Name" });
+
+            int columnsCount = 1;
+            foreach (var date in RatingLogic.GetInstance().GetAllDates(newGroup))
             {
-                Trace.WriteLine(date.ToString());
-                Table.Columns.Add(new DataGridTextColumn() { Header = date.ToString() } );
+                table.Columns.Add(date.ToString(), typeof(int));
+                Table.Columns.Add(new DataGridTextColumn() { Binding = new Binding(String.Format("[{0}]", date.ToString())), Header = date.ToString() });
+                Trace.WriteLine("Format: " + String.Format("[{0}]", date.ToString()));
+                columnsCount++;
             }
+
+            
+
+            var names = RatingLogic.GetInstance().GetNames(newGroup);
+            for (int i = 0; i < names.Length; i++)
+            {
+                object[] values = new object[columnsCount];
+                values[0] = names[i];
+
+                var grades = RatingLogic.GetInstance().GetGrades(names[i]);
+                for (int j = 1; j < columnsCount; j++)
+                {
+                    if (j - 1 >= grades.Length)
+                        values[j] = 0;
+                    else
+                        values[j] = grades[j - 1];
+                    //Trace.WriteLine("Grade: " + grades[j - 1]);
+                }
+
+                table.Rows.Add(values);
+            }
+
+            Table.ItemsSource = table.DefaultView;
+
         }
     }
 }

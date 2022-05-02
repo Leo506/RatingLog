@@ -18,9 +18,7 @@
         </ComboBox>
 
         <DataGrid Grid.Row="1" x:Name="Table" AutoGenerateColumns="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Name"/>
-            </DataGrid.Columns>
+
         </DataGrid>
     </Grid>
 </Page>

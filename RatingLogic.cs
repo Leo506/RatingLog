@@ -52,5 +52,15 @@ namespace RatingLog
             }
             return result;
         }
+
+        public string[] GetNames(string group)
+        {
+            return DBManip.GetAllNames(group);
+        }
+
+        public int[] GetGrades(string name)
+        {
+            return DBManip.GetGrades(name);
+        }
     }
 }
