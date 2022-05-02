@@ -25,6 +25,13 @@ namespace RatingLog
             InitializeComponent();
 
             MainFrame.Content = new AuthorizationPage();
+
+            RatingLogic.AuthorizationSuccess += OnAuth;
+        }
+
+        private void OnAuth()
+        {
+            MainFrame.Content = new Grades();
         }
     }
 }

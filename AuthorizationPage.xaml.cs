@@ -30,8 +30,7 @@ namespace RatingLog
             var login = LoginInput.Text;
             var password = PasswordInput.Password;
 
-            if (DBManip.HasUser(login, password))
-                MessageBox.Show("Success authorization!!!");
+            RatingLogic.GetInstance().TryToAuth(login, password);
         }
     }
 }

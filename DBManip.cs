@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 
-namespace RatingLog
+namespace RatingLog.Database
 {
     public class DBManip
     {
@@ -40,6 +41,47 @@ namespace RatingLog
             reader.Dispose();
 
             return result;
+        }
+
+
+        public static string[] GetAllGroups()
+        {
+            string command = "call GetAllGroupsName();";
+            MySqlCommand cmd = new MySqlCommand(command, connection);
+
+            var reader = cmd.ExecuteReader();
+            List<string> groups = new List<string>();
+
+            while (reader.Read())
+                groups.Add(reader.GetString("groupname"));
+
+            reader.Close();
+            reader.Dispose ();
+
+            return groups.ToArray();
+        }
+
+        public static DateTime[] GetAllDates(string groupName)
+        {
+            string command = $"call GetAllDatesByGroup(\"{groupName}\");";
+            MySqlCommand cmd = new MySqlCommand(command, connection);
+
+            var reader = cmd.ExecuteReader();
+            List<DateTime> dates = new List<DateTime>();
+
+            while (reader.Read())
+            {
+                var tmp = reader.GetString("date");
+                dates.Add(DateTime.Parse(tmp));
+            }
+
+            reader.Close();
+            reader.Dispose();
+
+            Trace.WriteLine("Count of dates: " + dates.Count);
+
+            return dates.ToArray();
+
         }
 
     }
